@@ -7,14 +7,14 @@ function App() {
   let [data, setData] = useState([[]])
   let [search, setSearch] = useState("")
   useEffect(() => {
-    axios.get("https://xcountries-backend.labs.crio.do/all")
+    axios.get("https://countries-search-data-prod-812920491762.asia-south1.run.app/countries")
       .then((res) => {
         setData(res.data);
       })
       .catch((err) => { console.error("Error fetching data: ", err) })
   }, [])
   const filteredData = data.filter((item) =>
-    (item.name || "").toLowerCase().includes(search.toLowerCase())
+    (item.common || "").toLowerCase().includes(search.toLowerCase())
 
   );
   console.log(search)
@@ -36,13 +36,13 @@ function App() {
       }}>
         {filteredData.map((country) => (
           <div className="countryCard">
-            <img src={country.flag} alt={country.abbr} style={{
+            <img src={country.png}  style={{
               width: "120px",
               height: "80px",
               objectFit: "contain",
               borderRadius: "8px",
             }} />
-            <h2>{country.name}</h2>
+            <h2>{country.common}</h2>
           </div>
         )
 
