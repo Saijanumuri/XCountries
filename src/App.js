@@ -1,18 +1,31 @@
-import React  from "react";
-import { useState , useEffect} from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 
 function App() {
-  let [data,setData]=useState([[]])
-  useEffect(()=>{
+  let [data, setData] = useState([[]])
+  let [search, setSearch] = useState("")
+  useEffect(() => {
     axios.get("https://xcountries-backend.labs.crio.do/all")
-    .then((res)=>{setData(res.data)})
-    .catch((err)=>{console.error("Error fetching data: ", err)})
-  },[])
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => { console.error("Error fetching data: ", err) })
+  }, [])
+  const filteredData = data.filter((item) =>
+    (item.name || "").toLowerCase().includes(search.toLowerCase())
 
+  );
+  console.log(search)
+
+  console.log(data)
   return (
-    <div style={{
+    <div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <input onChange={(e) => setSearch(e.target.value)} style={{ width: "500px", height: "30px", marginBottom: "10px" }} type="text" placeholder="Search for Countries" />
+      </div>
+      <div style={{
         display: "flex",
         flexWrap: "wrap",
         gap: "20px",
@@ -21,36 +34,23 @@ function App() {
         background: "#f0f2f5",
         minHeight: "100vh",
       }}>
-      {data.map((country)=>(
-        <div   style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: "10px",
-            background: "white",
-            height: "max-content",
-            width: "200px",
-            borderRadius: "15px",
-            boxShadow: "0px 4px 12px rgba(0, 0, 0, 0.15)",
-            textAlign: "center",
-            padding: "15px",
-            transition: "0.3s",
-            cursor: "pointer",
-          }}>
-          <img src={country.flag} alt={country.abbr} style={{
+        {filteredData.map((country) => (
+          <div className="countryCard">
+            <img src={country.flag} alt={country.abbr} style={{
               width: "120px",
               height: "80px",
               objectFit: "contain",
               borderRadius: "8px",
-            }}/>
-          <h2>{country.name}</h2>
-        </div>
-      )
-      
-      )}
+            }} />
+            <h2>{country.name}</h2>
+          </div>
+        )
 
+        )}
+
+      </div>
     </div>
-    
+
   );
 }
 
